@@ -1,5 +1,4 @@
-﻿@using CodeZoneStock.Models.DataEntities;
-@model StoresViewModel
+﻿@model IEnumerable<StoreFormViewModel>
 
     @{
         ViewData["Title"] = "Stores";
@@ -11,48 +10,14 @@
     </h2>
     <hr />
 
-    <div class="container">
-        <h2>
-            Add Store
-        </h2>
+    <a class="btn btn-success" asp-action="CreateStore">
+        <i class="bi bi-plus-lg"></i>
+        Add New Store
+        </a>
 
-        <section>
-            <form method="post" asp-action="Add">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label asp-for="Name" class="text-muted"></label>
-                            <input asp-for="Name" type="text" class="form-control" minlength="2" />
-                            <span asp-validation-for="Name" class="text-danger"></span>
 
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group mt-4">
-                            <button class="btn btn-success">
-                                <i class="bi bi-plus-lg"></i>
-                                Add
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </section>
-        @*<div class="row">
-            <div class="col-md-6">
-                <input type="text" class="form-control" placeholder="StoreName" aria-label="StoreName" aria-describedby="basic-addon1">
-            </div>
-            <div class="col-md-6">
-                <button class="btn btn-success">
-                    Add
-                    <i class="bi bi-plus-lg"></i>
-                </button>
-            </div>
-        </div>*@
-    </div>
-
-    <div class="m-4">
-        @if (!Model.Stores.Any())
+    <div class="mt-4">
+        @if (!Model.Any())
         {
             <div class="alert alert-warning" role="alert">
             <i class="bi bi-exclamation-circle"></i>
@@ -61,39 +26,79 @@
         }
         else
         {
-            <div class="card" style="width: 30rem;">
-                <ul class="list-group list-group-flush">
-                    @foreach (var store in Model.Stores)
-                    {
-                        <li class="list-group-item">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <p>@store.Name</p>
-                                </div>
-                                <div class="col-md-3">
-                                    <button class="btn btn-info">
-                                        <i class="bi bi-pencil-square"></i>
-                                        Edit
-                                    </button>
-                                </div>
-                                <div class="col-md-3">
-                                    <button class="btn btn-danger">
-                                        <i class="bi bi-trash"></i>
-                                        Delete
-                                    </button>
-                                </div>
-                            </div>
-                        </li>
+            <div class="row">
+                @foreach (var store in Model)
+                {
+                    <div class="col-12">
+                        <div class="card" style="width: 30rem;">
+                        <div class="list-group list-group-flush">
+                                <div class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-md-6 mt-3">
+                                            <p>@store.Name</p>
+                                        </div>    
+                                        <div class="col-md-6 mt-2">
+                                            <div class="d-flex justify-content-between">
+                                                <a asp-action="Edit" asp-route-id="@store.Id" class="btn btn-info">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                    Edit
+                                                </a>
+                                                <a href="javascript:;" class="btn btn-danger js-delete" data-id="@store.Id">
+                                                    <i class="bi bi-trash"></i>
+                                                    Delete
+                                                </a>
+                                            </div>
+                                        </div>
 
-                    }
-                </ul>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                        
+                    </div>
+
+                }
             </div>
-            
+
+                
         }
 </div>
 
 @section Scripts{
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <script>
+        $(document).ready(function(){
+            $('.js-delete').on('click', function(){
+                var btn = $(this);
+
+                bootbox.confirm({
+                    message: 'Are you sure you need to delete this Store?',
+                    buttons: {
+                        confirm: {
+                            label: 'Yes',
+                            className: 'btn-danger'
+                        },
+                        cancel: {
+                            label: 'No',
+                            className: 'btn-outline-secondary'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            $.ajax({
+                                url: '/Stores/Delete/' + btn.data('id'),
+                                success: function () {
+                                    btn.parents('.col-12').fadeOut();
+                                    toastr.success('Store Deleted');
+                                },
+                                Error: function () {
+                                    toastr.error('something went wrong!');
+                                }
+                            })
+                        }
+                    }
+                });
+                
+            })
+        })
+    </script>
 }

@@ -1,0 +1,40 @@
+﻿@model StoreFormViewModel
+
+@{
+    ViewData["Title"] = "Store Form";
+}
+
+<h2>@(Model.Id > 0 ? "Edit" : "Create") Store</h2>
+
+<hr />
+
+<section>
+    <form method="post" asp-action="@(Model.Id > 0 ? "Edit" : "Add")">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="hidden" asp-for="Id"/>
+                    <label asp-for="Name" class="text-muted"></label>
+                    <input asp-for="Name" type="text" class="form-control" minlength="2" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group mt-4">
+                    <button class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i>
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
+
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,5 +1,6 @@
 using CodeZoneStock.Models.CodeZoneStockDbContext;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,15 @@ builder.Services.AddControllersWithViews();
 //configure the DBContext;
 builder.Services.AddDbContext<CodeZoneStockDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("CodeZoneConnection")));
+
+builder.Services.AddMvc().AddNToastNotifyToastr(new ToastrOptions()
+{
+    ProgressBar = true,
+    PositionClass = ToastPositions.TopRight,
+    PreventDuplicates = true,
+    CloseButton = true
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
