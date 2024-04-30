@@ -1,0 +1,104 @@
+﻿@model IEnumerable<ItemFormViewModel>
+
+@{
+    ViewData["Title"] = "Items";
+}
+
+<h2>
+    <i class="bi bi-bag-plus"></i>
+    Items
+</h2>
+<hr />
+
+<a class="btn btn-success" asp-action="CreateItem">
+    <i class="bi bi-plus-lg"></i>
+    Add New Item
+</a>
+
+
+<div class="mt-4">
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning" role="alert">
+            <i class="bi bi-exclamation-circle"></i>
+            No Items found!
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var Item in Model)
+            {
+                <div class="col-12">
+                    <div class="card" style="width: 30rem;">
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-6 mt-3">
+                                        <p>@Item.Name</p>
+                                    </div>
+                                    <div class="col-md-6 mt-2">
+                                        <div class="d-flex justify-content-between">
+                                            <a asp-action="Edit" asp-route-id="@Item.Id" class="btn btn-info">
+                                                <i class="bi bi-pencil-square"></i>
+                                                Edit
+                                            </a>
+                                            <a href="javascript:;" class="btn btn-danger js-delete" data-id="@Item.Id">
+                                                <i class="bi bi-trash"></i>
+                                                Delete
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            }
+        </div>
+
+
+    }
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('.js-delete').on('click', function () {
+                var btn = $(this);
+
+                bootbox.confirm({
+                    message: 'Are you sure you need to delete this Item?',
+                    buttons: {
+                        confirm: {
+                            label: 'Yes',
+                            className: 'btn-danger'
+                        },
+                        cancel: {
+                            label: 'No',
+                            className: 'btn-outline-secondary'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            $.ajax({
+                                url: '/Items/Delete/' + btn.data('id'),
+                                success: function () {
+                                    btn.parents('.col-12').fadeOut();
+                                    toastr.success('Item Deleted');
+                                },
+                                Error: function () {
+                                    toastr.error('something went wrong!');
+                                }
+                            })
+                        }
+                    }
+                });
+
+            })
+        })
+    </script>
+}
