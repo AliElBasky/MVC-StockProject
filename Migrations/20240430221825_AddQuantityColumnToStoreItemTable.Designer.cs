@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeZoneStock.Migrations
 {
     [DbContext(typeof(CodeZoneStockDbContext))]
-    [Migration("20240428175514_AddCodeZoneSockTables")]
-    partial class AddCodeZoneSockTables
+    [Migration("20240430221825_AddQuantityColumnToStoreItemTable")]
+    partial class AddQuantityColumnToStoreItemTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,6 +32,7 @@ namespace CodeZoneStock.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -48,6 +49,7 @@ namespace CodeZoneStock.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -55,34 +57,51 @@ namespace CodeZoneStock.Migrations
                     b.ToTable("Stores");
                 });
 
-            modelBuilder.Entity("ItemStore", b =>
+            modelBuilder.Entity("CodeZoneStock.Models.DataEntities.StoreItem", b =>
                 {
-                    b.Property<int>("ItemsId")
+                    b.Property<int>("StoreId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StoresId")
+                    b.Property<int>("ItemId")
                         .HasColumnType("int");
 
-                    b.HasKey("ItemsId", "StoresId");
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
 
-                    b.HasIndex("StoresId");
+                    b.HasKey("StoreId", "ItemId");
 
-                    b.ToTable("ItemStore");
+                    b.HasIndex("ItemId");
+
+                    b.ToTable("StoreItem");
                 });
 
-            modelBuilder.Entity("ItemStore", b =>
+            modelBuilder.Entity("CodeZoneStock.Models.DataEntities.StoreItem", b =>
                 {
-                    b.HasOne("CodeZoneStock.Models.DataEntities.Item", null)
-                        .WithMany()
-                        .HasForeignKey("ItemsId")
+                    b.HasOne("CodeZoneStock.Models.DataEntities.Item", "Item")
+                        .WithMany("ItemStores")
+                        .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CodeZoneStock.Models.DataEntities.Store", null)
-                        .WithMany()
-                        .HasForeignKey("StoresId")
+                    b.HasOne("CodeZoneStock.Models.DataEntities.Store", "Store")
+                        .WithMany("ItemStores")
+                        .HasForeignKey("StoreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Item");
+
+                    b.Navigation("Store");
+                });
+
+            modelBuilder.Entity("CodeZoneStock.Models.DataEntities.Item", b =>
+                {
+                    b.Navigation("ItemStores");
+                });
+
+            modelBuilder.Entity("CodeZoneStock.Models.DataEntities.Store", b =>
+                {
+                    b.Navigation("ItemStores");
                 });
 #pragma warning restore 612, 618
         }

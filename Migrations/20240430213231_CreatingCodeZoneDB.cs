@@ -4,7 +4,7 @@
 
 namespace CodeZoneStock.Migrations
 {
-    public partial class AddCodeZoneSockTables : Migration
+    public partial class CreatingCodeZoneDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,7 +14,7 @@ namespace CodeZoneStock.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -27,7 +27,7 @@ namespace CodeZoneStock.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -35,39 +35,39 @@ namespace CodeZoneStock.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ItemStore",
+                name: "StoreItem",
                 columns: table => new
                 {
-                    ItemsId = table.Column<int>(type: "int", nullable: false),
-                    StoresId = table.Column<int>(type: "int", nullable: false)
+                    ItemId = table.Column<int>(type: "int", nullable: false),
+                    StoreId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ItemStore", x => new { x.ItemsId, x.StoresId });
+                    table.PrimaryKey("PK_StoreItem", x => new { x.StoreId, x.ItemId });
                     table.ForeignKey(
-                        name: "FK_ItemStore_Items_ItemsId",
-                        column: x => x.ItemsId,
+                        name: "FK_StoreItem_Items_ItemId",
+                        column: x => x.ItemId,
                         principalTable: "Items",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ItemStore_Stores_StoresId",
-                        column: x => x.StoresId,
+                        name: "FK_StoreItem_Stores_StoreId",
+                        column: x => x.StoreId,
                         principalTable: "Stores",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ItemStore_StoresId",
-                table: "ItemStore",
-                column: "StoresId");
+                name: "IX_StoreItem_ItemId",
+                table: "StoreItem",
+                column: "ItemId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ItemStore");
+                name: "StoreItem");
 
             migrationBuilder.DropTable(
                 name: "Items");
