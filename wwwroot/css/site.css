@@ -14,5 +14,34 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    font-family: Arial, sans-serif;
+}
+
+.hint {
+    font-size: 0.7rem;
+    color: #6c757d;
+    margin-top: 4px;
+    font-style: italic;
+}
+
+.article-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.article-title {
+    color: #0056b3;
+    text-align: center;
+}
+
+.thank-you {
+    margin-top: 20px;
+    font-style: italic;
+    color: #555;
 }

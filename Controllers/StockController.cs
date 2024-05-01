@@ -48,7 +48,7 @@ namespace CodeZoneStock.Controllers
                 {
                     ModelState.AddModelError("Quantity", "Quantity should be at least 1");
                 }
-                return RedirectToAction("Add", model);
+                return RedirectToAction("Index", model);
             }
             var store = await _context.Stores.Include(s => s.ItemStores)
                     .FirstOrDefaultAsync(s => s.Id == model.StoreId);
@@ -82,8 +82,8 @@ namespace CodeZoneStock.Controllers
             }
 
             _toastNotification.AddSuccessToastMessage("Store Updated Successfully");
-            return RedirectToAction("Index");
-            //return Ok();
+            //return RedirectToAction("Index");
+            return Json(new { success = true, totalQuantity = model.TotalQuantity });
         }
     }
 }

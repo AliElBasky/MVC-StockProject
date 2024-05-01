@@ -12,6 +12,7 @@ namespace CodeZoneStock.Models.ViewModels
         public int StoreId { get; set; }
         
         [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Please enter a value bigger than {1}")]
         public int Quantity { get; set; }
         public int TotalQuantity { get; set; }
         public ICollection<StoreFormViewModel>? Stores { get; set; }
